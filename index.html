@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STRUKTURA — Demolizioni Speciali</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Playfair+Display:ital,wght@1,400;1,700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #080808;
+    --off-black: #111010;
+    --dark: #181614;
+    --iron: #2a2623;
+    --rust: #c4440a;
+    --rust-dim: #8a3108;
+    --smoke: #7a7369;
+    --ash: #b5ae a5;
+    --ash: #b5aea5;
+    --cream: #e8e2d9;
+    --white: #f5f1ec;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-body: 'DM Mono', monospace;
+    --font-accent: 'Playfair Display', serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.7;
+    cursor: none;
+    overflow-x: hidden;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 10px; height: 10px;
+    background: var(--rust);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.05s, width 0.2s, height 0.2s, background 0.2s;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(196,68,10,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.12s ease, width 0.3s, height 0.3s;
+  }
+  body:hover .cursor { opacity: 1; }
+  a:hover ~ .cursor, button:hover ~ .cursor { width: 6px; height: 6px; }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.35;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 48px;
+    mix-blend-mode: normal;
+  }
+  nav::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 48px; right: 48px;
+    height: 1px;
+    background: rgba(181,174,165,0.12);
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 26px;
+    letter-spacing: 0.18em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--rust); }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--font-body);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--smoke);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--cream); }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 48px 80px;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      linear-gradient(180deg, rgba(8,8,8,0.2) 0%, rgba(8,8,8,0.0) 40%, rgba(8,8,8,0.85) 80%, var(--black) 100%),
+      linear-gradient(90deg, rgba(8,8,8,0.6) 0%, transparent 60%);
+    background-color: #1a1512;
+    z-index: 0;
+  }
+  /* Geometric abstract background */
+  .hero-graphic {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .hero-graphic svg {
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .hero-counter {
+    position: absolute;
+    top: 120px; right: 48px;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--smoke);
+    writing-mode: vertical-lr;
+    transform: rotate(180deg);
+  }
+  .hero-tag {
+    position: relative;
+    z-index: 2;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .hero-tag::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--rust);
+  }
+  .hero-title {
+    position: relative;
+    z-index: 2;
+    font-family: var(--font-display);
+    font-size: clamp(64px, 10vw, 148px);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    max-width: 900px;
+    animation: fadeUp 1.2s cubic-bezier(0.16,1,0.3,1) 0.2s both;
+  }
+  .hero-title em {
+    font-family: var(--font-accent);
+    font-style: italic;
+    color: var(--rust);
+  }
+  .hero-sub {
+    position: relative;
+    z-index: 2;
+    max-width: 520px;
+    color: var(--smoke);
+    font-size: 13px;
+    line-height: 1.8;
+    margin-top: 32px;
+    animation: fadeUp 1.2s cubic-bezier(0.16,1,0.3,1) 0.5s both;
+  }
+  .hero-cta {
+    position: relative;
+    z-index: 2;
+    margin-top: 48px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    animation: fadeUp 1.2s cubic-bezier(0.16,1,0.3,1) 0.7s both;
+  }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--rust);
+    color: var(--white);
+    padding: 16px 32px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.3s;
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  }
+  .btn-primary:hover { background: var(--rust-dim); transform: translateY(-2px); }
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--cream);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(181,174,165,0.3);
+    padding-bottom: 2px;
+    transition: color 0.3s, border-color 0.3s;
+  }
+  .btn-ghost:hover { color: var(--rust); border-color: var(--rust); }
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px; right: 48px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--smoke);
+    writing-mode: vertical-lr;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--rust), transparent);
+    animation: scrollAnim 2s ease-in-out infinite;
+  }
+
+  /* NUMBERS STRIP */
+  .numbers-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid rgba(181,174,165,0.1);
+    border-bottom: 1px solid rgba(181,174,165,0.1);
+  }
+  .number-item {
+    padding: 48px;
+    border-right: 1px solid rgba(181,174,165,0.1);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+  .number-item:last-child { border-right: none; }
+  .number-item.visible { opacity: 1; transform: translateY(0); }
+  .number-value {
+    font-family: var(--font-display);
+    font-size: 64px;
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+  .number-value span { color: var(--rust); }
+  .number-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--smoke);
+    margin-top: 12px;
+  }
+
+  /* SECTION SHARED */
+  section { position: relative; }
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--rust);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 48px;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--rust);
+  }
+
+  /* WHAT WE DO */
+  .services {
+    padding: 120px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .services-left {
+    padding-right: 80px;
+    border-right: 1px solid rgba(181,174,165,0.1);
+  }
+  .services-title {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 5vw, 72px);
+    line-height: 0.95;
+    color: var(--white);
+    margin-bottom: 40px;
+  }
+  .services-title em {
+    font-family: var(--font-accent);
+    font-style: italic;
+    color: var(--smoke);
+  }
+  .services-desc {
+    color: var(--smoke);
+    line-height: 1.9;
+    max-width: 400px;
+  }
+  .services-right {
+    padding-left: 80px;
+  }
+  .service-item {
+    padding: 36px 0;
+    border-bottom: 1px solid rgba(181,174,165,0.1);
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    gap: 24px;
+    align-items: start;
+    cursor: pointer;
+    group: true;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .service-item.visible { opacity: 1; transform: translateX(0); }
+  .service-item:first-child { border-top: 1px solid rgba(181,174,165,0.1); }
+  .service-num {
+    font-size: 11px;
+    color: var(--rust);
+    letter-spacing: 0.15em;
+    margin-top: 3px;
+  }
+  .service-name {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 10px;
+    transition: color 0.3s;
+  }
+  .service-item:hover .service-name { color: var(--rust); }
+  .service-text {
+    font-size: 12px;
+    color: var(--smoke);
+    line-height: 1.7;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+  .service-item.open .service-text { max-height: 200px; }
+  .service-arrow {
+    width: 24px; height: 24px;
+    border: 1px solid rgba(181,174,165,0.2);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.3s, border-color 0.3s;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .service-item.open .service-arrow { transform: rotate(45deg); border-color: var(--rust); }
+  .service-arrow::before { content: '+'; color: var(--cream); font-size: 16px; }
+  .service-item.open .service-arrow::before { color: var(--rust); }
+
+  /* PROJECTS */
+  .projects {
+    padding: 80px 48px 120px;
+  }
+  .projects-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 64px;
+  }
+  .projects-title {
+    font-family: var(--font-display);
+    font-size: clamp(40px, 5vw, 68px);
+    line-height: 0.95;
+    color: var(--white);
+  }
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .project-card {
+    position: relative;
+    aspect-ratio: 3/4;
+    overflow: hidden;
+    background: var(--iron);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s, transform 0.7s;
+  }
+  .project-card.visible { opacity: 1; transform: translateY(0); }
+  .project-card:nth-child(2) { transition-delay: 0.1s; }
+  .project-card:nth-child(3) { transition-delay: 0.2s; }
+  .project-bg {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.6s ease;
+  }
+  .project-card:hover .project-bg { transform: scale(1.05); }
+  .project-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.2) 60%, transparent 100%);
+  }
+  .project-content {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 32px;
+    transform: translateY(12px);
+    transition: transform 0.4s;
+  }
+  .project-card:hover .project-content { transform: translateY(0); }
+  .project-cat {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 8px;
+  }
+  .project-name {
+    font-family: var(--font-display);
+    font-size: 30px;
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: 0.04em;
+  }
+  .project-loc {
+    font-size: 11px;
+    color: var(--smoke);
+    margin-top: 6px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.3s 0.05s, transform 0.3s 0.05s;
+  }
+  .project-card:hover .project-loc { opacity: 1; transform: translateY(0); }
+
+  /* Graphic placeholders for project cards */
+  .card-graphic {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* MISSION */
+  .mission {
+    padding: 120px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    border-top: 1px solid rgba(181,174,165,0.1);
+  }
+  .mission-visual {
+    position: relative;
+    aspect-ratio: 4/5;
+    background: var(--iron);
+    overflow: hidden;
+  }
+  .mission-quote {
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: clamp(28px, 3.5vw, 48px);
+    color: var(--white);
+    line-height: 1.25;
+    margin-bottom: 32px;
+  }
+  .mission-body {
+    color: var(--smoke);
+    line-height: 1.9;
+    margin-bottom: 48px;
+  }
+
+  /* CONTACT */
+  .contact {
+    padding: 120px 48px;
+    background: var(--dark);
+    border-top: 1px solid rgba(181,174,165,0.1);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .contact-title {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 6vw, 96px);
+    line-height: 0.92;
+    color: var(--white);
+    margin-bottom: 32px;
+  }
+  .contact-info { color: var(--smoke); }
+  .contact-info a { color: var(--cream); text-decoration: none; border-bottom: 1px solid rgba(181,174,165,0.3); transition: color 0.3s; }
+  .contact-info a:hover { color: var(--rust); }
+  .contact-info p { margin-bottom: 10px; }
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .form-group label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--smoke);
+  }
+  .form-group input, .form-group textarea, .form-group select {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(181,174,165,0.15);
+    color: var(--cream);
+    padding: 14px 16px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.3s;
+    resize: none;
+    appearance: none;
+  }
+  .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+    border-color: var(--rust);
+  }
+  .form-group textarea { height: 120px; }
+  .form-submit {
+    align-self: flex-start;
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 48px;
+    border-top: 1px solid rgba(181,174,165,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 0.15em;
+    color: var(--smoke);
+    text-decoration: none;
+  }
+  .footer-logo span { color: var(--rust); }
+  .footer-copy {
+    font-size: 11px;
+    color: var(--smoke);
+    letter-spacing: 0.1em;
+  }
+  .footer-links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+  }
+  .footer-links a {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--smoke);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .footer-links a:hover { color: var(--cream); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollAnim {
+    0%, 100% { opacity: 0.3; transform: scaleY(0.3); transform-origin: top; }
+    50% { opacity: 1; transform: scaleY(1); transform-origin: top; }
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    .hero { padding: 0 24px 60px; }
+    .numbers-strip { grid-template-columns: 1fr 1fr; }
+    .number-item { padding: 32px 24px; }
+    .services { grid-template-columns: 1fr; padding: 80px 24px; }
+    .services-left { padding-right: 0; border-right: none; border-bottom: 1px solid rgba(181,174,165,0.1); padding-bottom: 48px; margin-bottom: 48px; }
+    .services-right { padding-left: 0; }
+    .projects { padding: 60px 24px; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .project-card { aspect-ratio: 4/3; }
+    .mission { grid-template-columns: 1fr; padding: 80px 24px; }
+    .contact { grid-template-columns: 1fr; padding: 80px 24px; }
+    .form-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 24px; padding: 32px 24px; text-align: center; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">STRUK<span>T</span>URA</a>
+  <ul class="nav-links">
+    <li><a href="#servizi">Servizi</a></li>
+    <li><a href="#progetti">Progetti</a></li>
+    <li><a href="#chi-siamo">Chi siamo</a></li>
+    <li><a href="#contatti">Contatti</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-graphic">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1a1512"/>
+          <stop offset="100%" stop-color="#0d0c0b"/>
+        </linearGradient>
+        <linearGradient id="gRust" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#c4440a" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#c4440a" stop-opacity="0"/>
+        </linearGradient>
+        <filter id="blur"><feGaussianBlur stdDeviation="60"/></filter>
+      </defs>
+      <rect width="1440" height="900" fill="url(#g1)"/>
+      <!-- Background architectural shapes -->
+      <rect x="700" y="-100" width="4" height="1100" fill="#2a2623" opacity="0.4"/>
+      <rect x="900" y="-100" width="1" height="1100" fill="#2a2623" opacity="0.2"/>
+      <rect x="1100" y="-100" width="2" height="1100" fill="#2a2623" opacity="0.3"/>
+      <rect x="1300" y="-100" width="1" height="1100" fill="#2a2623" opacity="0.15"/>
+      <!-- Horizontal lines -->
+      <line x1="680" y1="200" x2="1440" y2="200" stroke="#2a2623" stroke-width="1" opacity="0.4"/>
+      <line x1="680" y1="400" x2="1440" y2="400" stroke="#2a2623" stroke-width="1" opacity="0.2"/>
+      <line x1="680" y1="600" x2="1440" y2="600" stroke="#2a2623" stroke-width="1" opacity="0.3"/>
+      <!-- Large building silhouette -->
+      <rect x="760" y="100" width="200" height="800" fill="#1e1b18" opacity="0.9"/>
+      <rect x="970" y="250" width="140" height="650" fill="#1a1714" opacity="0.9"/>
+      <rect x="1120" y="180" width="120" height="720" fill="#201d1a" opacity="0.9"/>
+      <rect x="1250" y="300" width="80" height="600" fill="#1c1916" opacity="0.8"/>
+      <rect x="1340" y="200" width="180" height="700" fill="#181512" opacity="0.9"/>
+      <!-- Windows grid -->
+      <g fill="#c4440a" opacity="0.12">
+        <rect x="780" y="130" width="18" height="24"/>
+        <rect x="810" y="130" width="18" height="24"/>
+        <rect x="840" y="130" width="18" height="24"/>
+        <rect x="870" y="130" width="18" height="24"/>
+        <rect x="900" y="130" width="18" height="24"/>
+        <rect x="780" y="170" width="18" height="24"/>
+        <rect x="810" y="170" width="18" height="24"/>
+        <rect x="840" y="170" width="18" height="24" fill="#c4440a" opacity="0.4"/>
+        <rect x="870" y="170" width="18" height="24"/>
+        <rect x="900" y="170" width="18" height="24"/>
+        <rect x="780" y="210" width="18" height="24"/>
+        <rect x="810" y="210" width="18" height="24"/>
+        <rect x="840" y="210" width="18" height="24"/>
+        <rect x="870" y="210" width="18" height="24"/>
+        <rect x="900" y="210" width="18" height="24"/>
+        <rect x="780" y="250" width="18" height="24"/>
+        <rect x="810" y="250" width="18" height="24"/>
+        <rect x="870" y="250" width="18" height="24"/>
+        <rect x="900" y="250" width="18" height="24"/>
+        <rect x="990" y="280" width="14" height="20"/>
+        <rect x="1014" y="280" width="14" height="20"/>
+        <rect x="1038" y="280" width="14" height="20" fill="#c4440a" opacity="0.35"/>
+        <rect x="1062" y="280" width="14" height="20"/>
+        <rect x="990" y="314" width="14" height="20"/>
+        <rect x="1014" y="314" width="14" height="20"/>
+        <rect x="1038" y="314" width="14" height="20"/>
+        <rect x="1062" y="314" width="14" height="20"/>
+        <rect x="1140" y="210" width="16" height="22"/>
+        <rect x="1168" y="210" width="16" height="22"/>
+        <rect x="1196" y="210" width="16" height="22" fill="#c4440a" opacity="0.3"/>
+        <rect x="1140" y="248" width="16" height="22"/>
+        <rect x="1168" y="248" width="16" height="22"/>
+        <rect x="1196" y="248" width="16" height="22"/>
+      </g>
+      <!-- Crane -->
+      <line x1="850" y1="80" x2="850" y2="-10" stroke="#2a2623" stroke-width="3"/>
+      <line x1="850" y1="-10" x2="1040" y2="-10" stroke="#2a2623" stroke-width="2"/>
+      <line x1="850" y1="-10" x2="700" y2="30" stroke="#2a2623" stroke-width="1.5"/>
+      <line x1="1040" y1="-10" x2="1040" y2="90" stroke="#2a2623" stroke-width="1" stroke-dasharray="4,4"/>
+      <!-- Rust glow -->
+      <ellipse cx="1100" cy="400" rx="300" ry="200" fill="url(#gRust)" filter="url(#blur)"/>
+      <!-- Foreground dust/debris hint -->
+      <rect x="0" y="750" width="1440" height="150" fill="url(#g1)" opacity="0.5"/>
+    </svg>
+  </div>
+
+  <div class="hero-counter">01 / 04</div>
+
+  <div class="hero-tag">Demolizioni Speciali · Est. 1974</div>
+  <h1 class="hero-title">
+    Rendiamo<br>
+    <em>possibile</em><br>
+    l'impossibile.
+  </h1>
+  <p class="hero-sub">Progettiamo soluzioni innovative per demolizioni speciali, decommissioning nucleare e decontaminazione industriale. Tecnologie brevettate. Riconoscimento internazionale.</p>
+  <div class="hero-cta">
+    <a href="#progetti" class="btn-primary">Scopri i progetti →</a>
+    <a href="#servizi" class="btn-ghost">I nostri servizi</a>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<div class="numbers-strip">
+  <div class="number-item reveal">
+    <div class="number-value">50<span>+</span></div>
+    <div class="number-label">Anni di esperienza</div>
+  </div>
+  <div class="number-item reveal">
+    <div class="number-value">800<span>+</span></div>
+    <div class="number-label">Progetti completati</div>
+  </div>
+  <div class="number-item reveal">
+    <div class="number-value">32<span></span></div>
+    <div class="number-label">Paesi nel mondo</div>
+  </div>
+  <div class="number-item reveal">
+    <div class="number-value">4<span></span></div>
+    <div class="number-label">Brevetti internazionali</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="servizi">
+  <div class="services-left">
+    <div class="section-label">Cosa facciamo</div>
+    <h2 class="services-title">Ogni sfida<br><em>richiede</em><br>una soluzione.</h2>
+    <p class="services-desc">Da oltre mezzo secolo trasformiamo le strutture più complesse in opportunità. La nostra R&D crea soluzioni laddove non ne esistono.</p>
+  </div>
+  <div class="services-right">
+    <div class="service-item reveal" onclick="toggleService(this)">
+      <span class="service-num">01</span>
+      <div>
+        <div class="service-name">Demolizioni</div>
+        <div class="service-text">La prima azienda in Italia dedicata esclusivamente alla demolizione specializzata. In oltre 40 anni abbiamo sviluppato tecnologie e metodi per eseguire qualsiasi tipo di demolizione, su qualsiasi struttura, in qualsiasi ambiente e condizione.</div>
+      </div>
+      <div class="service-arrow"></div>
+    </div>
+    <div class="service-item reveal" onclick="toggleService(this)">
+      <span class="service-num">02</span>
+      <div>
+        <div class="service-name">Engineering Consulting</div>
+        <div class="service-text">Demolire richiede la stessa complessità del costruire. Ogni intervento di decostruzione necessita di un progetto approfondito che consideri aspetti strutturali, ambientali, logistici e di sicurezza. Progettiamo tecnologie speciali e offriamo consulenza ingegneristica in tutto il mondo.</div>
+      </div>
+      <div class="service-arrow"></div>
+    </div>
+    <div class="service-item reveal" onclick="toggleService(this)">
+      <span class="service-num">03</span>
+      <div>
+        <div class="service-name">Decommissioning Nucleare</div>
+        <div class="service-text">Dal 2005 formiamo personale altamente qualificato per operare in aree radiologicamente attive. Siamo una delle realtà più qualificate d'Europa per la decontaminazione e dismissione di siti nucleari, riconosciuta nei principali forum internazionali del settore.</div>
+      </div>
+      <div class="service-arrow"></div>
+    </div>
+    <div class="service-item reveal" onclick="toggleService(this)">
+      <span class="service-num">04</span>
+      <div>
+        <div class="service-name">Bonifiche Ambientali</div>
+        <div class="service-text">Restituire territorio incontaminato è la nostra missione. Operiamo nella riqualificazione di terreni e aree contaminate da amianto e sostanze inquinanti, con un approccio che guarda al benessere ambientale del pianeta come a un obiettivo concreto e raggiungibile.</div>
+      </div>
+      <div class="service-arrow"></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects" id="progetti">
+  <div class="projects-header">
+    <div>
+      <div class="section-label">Progetti in evidenza</div>
+      <h2 class="projects-title">Il lavoro<br>parla da sé.</h2>
+    </div>
+    <a href="#contatti" class="btn-ghost">Tutti i progetti →</a>
+  </div>
+  <div class="projects-grid">
+    <!-- Card 1 -->
+    <div class="project-card reveal">
+      <div class="project-bg">
+        <div class="card-graphic">
+          <svg viewBox="0 0 480 640" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+            <rect width="480" height="640" fill="#1a1714"/>
+            <!-- Tower silhouette -->
+            <rect x="160" y="80" width="160" height="560" fill="#221f1c"/>
+            <rect x="200" y="60" width="80" height="580" fill="#1e1b18"/>
+            <rect x="220" y="40" width="40" height="600" fill="#1c1916"/>
+            <!-- Top structure -->
+            <rect x="195" y="35" width="90" height="20" fill="#252220"/>
+            <rect x="225" y="15" width="30" height="25" fill="#222019"/>
+            <!-- Windows -->
+            <g fill="#c4440a" opacity="0.2">
+              <rect x="210" y="90" width="14" height="18"/>
+              <rect x="230" y="90" width="14" height="18"/>
+              <rect x="250" y="90" width="14" height="18"/>
+              <rect x="210" y="120" width="14" height="18"/>
+              <rect x="230" y="120" width="14" height="18" fill="#c4440a" opacity="0.5"/>
+              <rect x="250" y="120" width="14" height="18"/>
+              <rect x="210" y="150" width="14" height="18"/>
+              <rect x="230" y="150" width="14" height="18"/>
+              <rect x="250" y="150" width="14" height="18"/>
+              <rect x="210" y="180" width="14" height="18"/>
+              <rect x="230" y="180" width="14" height="18"/>
+              <rect x="250" y="180" width="14" height="18"/>
+              <rect x="210" y="210" width="14" height="18"/>
+              <rect x="250" y="210" width="14" height="18"/>
+              <rect x="175" y="180" width="12" height="16"/>
+              <rect x="175" y="210" width="12" height="16" fill="#c4440a" opacity="0.4"/>
+              <rect x="175" y="240" width="12" height="16"/>
+              <rect x="293" y="180" width="12" height="16"/>
+              <rect x="293" y="210" width="12" height="16"/>
+              <rect x="293" y="240" width="12" height="16" fill="#c4440a" opacity="0.45"/>
+            </g>
+            <!-- Demolition dust -->
+            <ellipse cx="240" cy="580" rx="140" ry="30" fill="#c4440a" opacity="0.04" filter="blur(20px)"/>
+            <line x1="0" y1="600" x2="480" y2="600" stroke="#2a2623" stroke-width="1"/>
+            <rect x="0" y="600" width="480" height="40" fill="#181512"/>
+            <!-- Dust particles -->
+            <circle cx="120" cy="540" r="3" fill="#7a7369" opacity="0.3"/>
+            <circle cx="340" cy="520" r="2" fill="#7a7369" opacity="0.2"/>
+            <circle cx="80" cy="500" r="4" fill="#7a7369" opacity="0.15"/>
+            <circle cx="400" cy="560" r="2" fill="#7a7369" opacity="0.25"/>
+          </svg>
+        </div>
+      </div>
+      <div class="project-overlay"></div>
+      <div class="project-content">
+        <div class="project-cat">Grattacieli · Lione</div>
+        <div class="project-name">Tour UAP</div>
+        <div class="project-loc">Sistema TDW® · 180 m di altezza</div>
+      </div>
+    </div>
+    <!-- Card 2 -->
+    <div class="project-card reveal">
+      <div class="project-bg">
+        <div class="card-graphic">
+          <svg viewBox="0 0 480 640" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+            <rect width="480" height="640" fill="#161310"/>
+            <!-- Industrial cooling tower -->
+            <path d="M100,640 L160,200 L320,200 L380,640 Z" fill="#1e1b17" opacity="0.9"/>
+            <path d="M140,640 L190,220 L290,220 L340,640 Z" fill="#1a1714" opacity="0.9"/>
+            <!-- Cylinder top -->
+            <ellipse cx="240" cy="200" rx="80" ry="20" fill="#252220"/>
+            <ellipse cx="240" cy="195" rx="80" ry="15" fill="#1e1b18" stroke="#2a2623" stroke-width="1"/>
+            <!-- Warning stripes -->
+            <rect x="130" y="380" width="220" height="6" fill="#c4440a" opacity="0.3"/>
+            <rect x="130" y="460" width="220" height="4" fill="#c4440a" opacity="0.2"/>
+            <!-- Radiation symbol area -->
+            <circle cx="240" cy="320" r="35" fill="none" stroke="#c4440a" stroke-width="1" opacity="0.2"/>
+            <circle cx="240" cy="320" r="8" fill="#c4440a" opacity="0.15"/>
+            <!-- Steam/smoke effect -->
+            <ellipse cx="220" cy="140" rx="25" ry="40" fill="#b5aea5" opacity="0.04"/>
+            <ellipse cx="260" cy="120" rx="20" ry="50" fill="#b5aea5" opacity="0.03"/>
+            <ellipse cx="240" cy="100" rx="30" ry="60" fill="#b5aea5" opacity="0.03"/>
+            <!-- Ground -->
+            <rect x="0" y="610" width="480" height="30" fill="#131110"/>
+            <rect x="60" y="600" width="360" height="15" fill="#181512" opacity="0.8"/>
+          </svg>
+        </div>
+      </div>
+      <div class="project-overlay"></div>
+      <div class="project-content">
+        <div class="project-cat">Decommissioning Nucleare · Caorso</div>
+        <div class="project-name">Centrale Nucleare</div>
+        <div class="project-loc">Area radiologicamente attiva · 2009–presente</div>
+      </div>
+    </div>
+    <!-- Card 3 -->
+    <div class="project-card reveal">
+      <div class="project-bg">
+        <div class="card-graphic">
+          <svg viewBox="0 0 480 640" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+            <rect width="480" height="640" fill="#181412"/>
+            <!-- Bridge structure -->
+            <line x1="0" y1="340" x2="480" y2="340" stroke="#2a2623" stroke-width="3"/>
+            <!-- Main cables -->
+            <path d="M0,260 Q240,180 480,260" fill="none" stroke="#222019" stroke-width="2"/>
+            <path d="M0,280 Q240,200 480,280" fill="none" stroke="#2a2623" stroke-width="1.5"/>
+            <!-- Towers -->
+            <rect x="170" y="80" width="20" height="280" fill="#201d1a"/>
+            <rect x="290" y="80" width="20" height="280" fill="#201d1a"/>
+            <!-- Cross beams -->
+            <rect x="165" y="80" width="30" height="6" fill="#252220"/>
+            <rect x="165" y="110" width="30" height="4" fill="#252220"/>
+            <rect x="285" y="80" width="30" height="6" fill="#252220"/>
+            <rect x="285" y="110" width="30" height="4" fill="#252220"/>
+            <!-- Vertical cable hangers -->
+            <line x1="60" y1="255" x2="60" y2="340" stroke="#2a2623" stroke-width="1" opacity="0.5"/>
+            <line x1="100" y1="240" x2="100" y2="340" stroke="#2a2623" stroke-width="1" opacity="0.5"/>
+            <line x1="140" y1="225" x2="140" y2="340" stroke="#2a2623" stroke-width="1" opacity="0.5"/>
+            <line x1="340" y1="225" x2="340" y2="340" stroke="#2a2623" stroke-width="1" opacity="0.5"/>
+            <line x1="380" y1="240" x2="380" y2="340" stroke="#2a2623" stroke-width="1" opacity="0.5"/>
+            <line x1="420" y1="255" x2="420" y2="340" stroke="#2a2623" stroke-width="1" opacity="0.5"/>
+            <!-- River -->
+            <rect x="0" y="360" width="480" height="280" fill="#100e0d"/>
+            <path d="M0,380 Q120,370 240,385 Q360,400 480,380" fill="none" stroke="#1e1b18" stroke-width="2"/>
+            <path d="M0,420 Q120,410 240,425 Q360,435 480,415" fill="none" stroke="#1c1916" stroke-width="1.5"/>
+            <!-- Demolition crane on bridge -->
+            <rect x="220" y="280" width="8" height="60" fill="#c4440a" opacity="0.4"/>
+            <line x1="224" y1="280" x2="280" y2="250" stroke="#c4440a" stroke-width="1.5" opacity="0.3"/>
+            <!-- Rust glow under bridge -->
+            <ellipse cx="240" cy="350" rx="180" ry="20" fill="#c4440a" opacity="0.04"/>
+          </svg>
+        </div>
+      </div>
+      <div class="project-overlay"></div>
+      <div class="project-content">
+        <div class="project-cat">Infrastrutture · Piacenza</div>
+        <div class="project-name">Ponte sul Po</div>
+        <div class="project-loc">Demolizione controllata · Opera storica</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section class="mission" id="chi-siamo">
+  <div class="mission-visual">
+    <svg viewBox="0 0 480 600" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+      <rect width="480" height="600" fill="#1a1714"/>
+      <!-- Abstract industrial texture -->
+      <g stroke="#2a2623" stroke-width="1" fill="none">
+        <line x1="0" y1="0" x2="480" y2="600"/>
+        <line x1="0" y1="100" x2="480" y2="700"/>
+        <line x1="0" y1="200" x2="480" y2="800"/>
+        <line x1="-100" y1="0" x2="380" y2="600"/>
+        <line x1="-200" y1="0" x2="280" y2="600"/>
+      </g>
+      <!-- Large geometric form -->
+      <rect x="80" y="100" width="320" height="400" fill="#201d1a" opacity="0.8"/>
+      <rect x="120" y="140" width="240" height="320" fill="#1c1916" opacity="0.8"/>
+      <!-- Cross pattern -->
+      <rect x="222" y="100" width="36" height="400" fill="#181512" opacity="0.6"/>
+      <rect x="80" y="284" width="320" height="32" fill="#181512" opacity="0.6"/>
+      <!-- Detail marks -->
+      <circle cx="240" cy="300" r="60" fill="none" stroke="#c4440a" stroke-width="1" opacity="0.15"/>
+      <circle cx="240" cy="300" r="40" fill="none" stroke="#c4440a" stroke-width="1" opacity="0.1"/>
+      <circle cx="240" cy="300" r="4" fill="#c4440a" opacity="0.5"/>
+      <!-- Corner marks -->
+      <rect x="80" y="100" width="20" height="3" fill="#c4440a" opacity="0.4"/>
+      <rect x="80" y="100" width="3" height="20" fill="#c4440a" opacity="0.4"/>
+      <rect x="380" y="100" width="20" height="3" fill="#c4440a" opacity="0.4"/>
+      <rect x="397" y="100" width="3" height="20" fill="#c4440a" opacity="0.4"/>
+      <rect x="80" y="497" width="20" height="3" fill="#c4440a" opacity="0.4"/>
+      <rect x="80" y="480" width="3" height="20" fill="#c4440a" opacity="0.4"/>
+      <!-- Measurement lines -->
+      <line x1="40" y1="100" x2="40" y2="500" stroke="#c4440a" stroke-width="0.5" opacity="0.2"/>
+      <line x1="35" y1="100" x2="45" y2="100" stroke="#c4440a" stroke-width="0.5" opacity="0.3"/>
+      <line x1="35" y1="500" x2="45" y2="500" stroke="#c4440a" stroke-width="0.5" opacity="0.3"/>
+      <text x="30" y="305" font-size="10" fill="#c4440a" opacity="0.3" transform="rotate(-90,30,305)" font-family="monospace">400px</text>
+    </svg>
+    <!-- Floating label -->
+    <div style="position:absolute;bottom:24px;left:24px;font-size:10px;letter-spacing:0.25em;color:var(--rust);text-transform:uppercase;">R&D · Progettazione · Innovazione</div>
+  </div>
+  <div>
+    <div class="section-label">La nostra missione</div>
+    <p class="mission-quote">"Siamo un'azienda riconosciuta internazionalmente per la capacità di progettare soluzioni dove altri vedono solo ostacoli."</p>
+    <p class="mission-body">Quando non esistono soluzioni, il nostro reparto R&D le crea. In oltre 50 anni di attività abbiamo sviluppato tecnologie proprietarie, brevettate, che hanno ridefinito i limiti del possibile nelle demolizioni speciali.<br><br>Siamo quello che facciamo. E da oltre mezzo secolo cerchiamo di farlo nel modo migliore possibile.</p>
+    <a href="#contatti" class="btn-primary">Collabora con noi →</a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contatti">
+  <div>
+    <div class="section-label">Contatti</div>
+    <h2 class="contact-title">Parlaci<br>del tuo<br>progetto.</h2>
+    <div class="contact-info" style="margin-top:48px;">
+      <p>Via Leonardo da Vinci, 12/14</p>
+      <p>24060 Torre de' Roveri (BG)</p>
+      <br>
+      <p>Tel: <a href="tel:+390354218100">+39 035 421 8100</a></p>
+      <p>Mail: <a href="mailto:info@struktura.it">info@struktura.it</a></p>
+      <br>
+      <p style="font-size:10px;letter-spacing:0.2em;text-transform:uppercase;margin-top:32px;">Seguici su</p>
+      <div style="display:flex;gap:16px;margin-top:12px;">
+        <a href="#" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--smoke);text-decoration:none;border-bottom:1px solid rgba(181,174,165,0.2);transition:color 0.3s;" onmouseover="this.style.color='var(--rust)'" onmouseout="this.style.color='var(--smoke)'">LinkedIn</a>
+        <a href="#" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--smoke);text-decoration:none;border-bottom:1px solid rgba(181,174,165,0.2);transition:color 0.3s;" onmouseover="this.style.color='var(--rust)'" onmouseout="this.style.color='var(--smoke)'">Instagram</a>
+        <a href="#" style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--smoke);text-decoration:none;border-bottom:1px solid rgba(181,174,165,0.2);transition:color 0.3s;" onmouseover="this.style.color='var(--rust)'" onmouseout="this.style.color='var(--smoke)'">Youtube</a>
+      </div>
+    </div>
+  </div>
+  <div class="contact-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nome</label>
+        <input type="text" placeholder="Mario Rossi">
+      </div>
+      <div class="form-group">
+        <label>Azienda</label>
+        <input type="text" placeholder="Azienda S.r.l.">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" placeholder="mario@azienda.it">
+    </div>
+    <div class="form-group">
+      <label>Tipo di progetto</label>
+      <select>
+        <option value="" disabled selected>Seleziona un servizio</option>
+        <option>Demolizione Speciale</option>
+        <option>Engineering Consulting</option>
+        <option>Decommissioning Nucleare</option>
+        <option>Bonifica Ambientale</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Messaggio</label>
+      <textarea placeholder="Descrivi brevemente il tuo progetto..."></textarea>
+    </div>
+    <div class="form-submit">
+      <button class="btn-primary" onclick="handleSubmit(event)" style="border:none;cursor:pointer;">Invia richiesta →</button>
+    </div>
+    <p style="font-size:10px;color:var(--smoke);letter-spacing:0.1em;">Risponderemo entro 48 ore lavorative. I tuoi dati sono trattati secondo la nostra <a href="#" style="color:var(--smoke);text-decoration:underline;">Privacy Policy</a>.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">STRUK<span>T</span>URA</a>
+  <p class="footer-copy">© 2025 STRUKTURA S.p.a. — P.IVA 00478770167</p>
+  <ul class="footer-links">
+    <li><a href="#">Privacy Policy</a></li>
+    <li><a href="#">Cookie Policy</a></li>
+    <li><a href="#">Whistleblowing</a></li>
+  </ul>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animateRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button, .service-item, .project-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '16px';
+      cursor.style.height = '16px';
+      ring.style.width = '54px';
+      ring.style.height = '54px';
+      ring.style.borderColor = 'rgba(196,68,10,0.8)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '10px';
+      cursor.style.height = '10px';
+      ring.style.width = '36px';
+      ring.style.height = '36px';
+      ring.style.borderColor = 'rgba(196,68,10,0.5)';
+    });
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), entry.target.dataset.delay || 0);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach((el, i) => {
+    el.dataset.delay = (i % 3) * 100;
+    observer.observe(el);
+  });
+
+  // Service accordion
+  function toggleService(item) {
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.service-item').forEach(s => s.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Form submit mock
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target;
+    btn.textContent = 'Inviato ✓';
+    btn.style.background = '#2a6b3a';
+    setTimeout(() => {
+      btn.textContent = 'Invia richiesta →';
+      btn.style.background = '';
+    }, 3000);
+  }
+
+  // Nav background on scroll
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 80) {
+      nav.style.background = 'rgba(8,8,8,0.9)';
+      nav.style.backdropFilter = 'blur(12px)';
+    } else {
+      nav.style.background = 'transparent';
+      nav.style.backdropFilter = 'none';
+    }
+  });
+
+  // Parallax on hero graphic
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    const heroGraphic = document.querySelector('.hero-graphic');
+    if (heroGraphic && y < window.innerHeight) {
+      heroGraphic.style.transform = `translateY(${y * 0.3}px)`;
+    }
+  });
+</script>
+</body>
+</html>
